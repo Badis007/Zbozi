@@ -23,51 +23,55 @@ int main(int argc, char** argv) {
     }ZBOZI;
   
   
-    FILE * pFile; //NAČTENÍ SOUBORA
-    ZBOZI *zbozi=NULL; //ADRESA NA STRUKTURU -> MUSÍM POUŽÍVAT ZBOZI S MALYM
+     //NAČTENÍ SOUBORA
+    
+    ZBOZI *zbozi=NULL; 
     int pocet=0;
     int pocetSloupcu;
+    char mystring [VELIKOST];
     char *pch;
+    
+    
     float cenaCelkem=0;
     int hmotnostCelkem=0;
     int max=0;
-    int index=0;
-    char mystring [VELIKOST];
+    int index=0; 
     int i;
-  
-    if ((pFile = fopen(SOUBOR,"r")) == NULL){ //OTEVŘENÍ SOUBOROSE
+    
+    FILE * pFile;
+    if ((pFile = fopen(SOUBOR,"r")) == NULL){ 
         printf("Nebyl otevren vas soubor %s. \n",SOUBOR);
         return EXIT_FAILURE;
     }
   
-    while(fgets (mystring , VELIKOST , pFile) != NULL ){ //FGETS -> ZÍSKÁ ZNAKY ZE SOUBORU, ULOŽÍ DO PROMĚNNÉ mystring->pole, VELIKOST->velikost pole, pfile->z jakého souboru, bude to načítat dokud tam nic nebude
-        if(pocet >0){ //Skipnutí prvního řádku, nechem tam názvy.
-            zbozi = (ZBOZI*) realloc (zbozi, pocet * sizeof(ZBOZI)); //Vytvoření pole do proměnné zbozi
+    while(fgets (mystring , VELIKOST , pFile) != NULL ){ 
+        if(pocet >0){ 
+            zbozi = (ZBOZI*) realloc (zbozi, pocet * sizeof(ZBOZI)); 
             pocetSloupcu=1; 
-            pch = strtok (mystring,ODDELOVAC); //Ze stringu odstraní oddělovače a načte do proměnné pch
-            while (pch != NULL){ //Dokud tam něco je tak se opakuje cyklus
-                switch(pocetSloupcu){ //PocetSloupcu -> ridici promenna 
-                    case 1: //První sloupec -> nactu do neho udaje v prvnim sloupci jde o dodavatele
-                        strcpy(zbozi[pocet-1].dodavatel,pch);//strcpy -> pro kopírování stringových hodnot, zbozi-> do neho kopiruju hodnoty z pch-> zaznamy bez oddelovacu.
+            pch = strtok (mystring,ODDELOVAC); 
+            while (pch != NULL){ 
+                switch(pocetSloupcu){ 
+                    case 1: 
+                        strcpy(zbozi[pocet-1].dodavatel,pch);
                         break;
                     case 2:
                         strcpy(zbozi[pocet-1].nazev_zbozi,pch);
                         break;
                     case 3:
-                        zbozi[pocet-1].hmotnost=atoi(pch);//ATOI dělá ze stringového čísla napr. "12" normální intové číslo 12.
+                        zbozi[pocet-1].hmotnost=atoi(pch);
                         break;
                     case 4:
                         zbozi[pocet-1].pocet=atoi(pch);
                         break;
                     case 5:
-                        zbozi[pocet-1].cena=atof(pch);//ATOF dělá ze stringového čísla napr. "12.5" normální float číslo 12.5
+                        zbozi[pocet-1].cena=atof(pch);
                         break;
                 }
-                pch = strtok (NULL,ODDELOVAC); //IDK MUSÍ TO TAM BÝT
+                pch = strtok (NULL,ODDELOVAC); 
                 pocetSloupcu++;
             }
         }
-        pocet++; //Posunutí na další řádek
+        pocet++; 
     }
     
     if(fclose(pFile)==EOF){ //ZAVŘENÍ SOUBORU BO UŽ JE K PIČI
